@@ -24680,6 +24680,14 @@ function computeCategoryAgg(){
   return {list, grandTotalDp};
 }
 
+function fmtShortIN(n){
+  n = Math.round(n || 0);
+  const a = Math.abs(n), s = n < 0 ? '-' : '';
+  if(a >= 1e7) return s + (a/1e7).toFixed(1) + 'Cr';
+  if(a >= 1e5) return s + (a/1e5).toFixed(1) + 'L';
+  if(a >= 1e3) return s + (a/1e3).toFixed(1) + 'K';
+  return s + a;
+}
 function renderCategoryAnalysis(){
   const {list, grandTotalDp} = computeCategoryAgg();
 
@@ -24710,8 +24718,8 @@ function renderCategoryAnalysis(){
     tr.innerHTML = `
       <td><div class="cat-name-cell"><span class="cat-dot" style="background:${color.fg}"></span>${esc(c.category)}</div></td>
       <td class="center">${c.skuCount.toLocaleString('en-US')}</td>
-      <td class="center">${Math.round(c.stockQty).toLocaleString('en-US')}</td>
-      <td class="center">৳${Math.round(c.stockDp).toLocaleString('en-US')}</td>
+      <td class="center" title="${Math.round(c.stockQty).toLocaleString('en-US')}">${fmtShortIN(c.stockQty)}</td>
+      <td class="center" title="৳${Math.round(c.stockDp).toLocaleString('en-US')}">৳${fmtShortIN(c.stockDp)}</td>
       <td class="right">
         <div class="pct-cell">
           <div class="pct-bar-track"><div class="pct-bar-fill" style="width:${Math.min(c.pct,100).toFixed(1)}%; background:${color.fg}"></div></div>
@@ -24732,8 +24740,8 @@ function renderCategoryAnalysis(){
   totalTr.innerHTML = `
     <td>Total${(state3.search || state3.brand) ? ' (filtered)' : ''}</td>
     <td class="center">${totalSkuFiltered.toLocaleString('en-US')}</td>
-    <td class="center">${Math.round(totalStockQtyFiltered).toLocaleString('en-US')}</td>
-    <td class="center">৳${Math.round(totalStockDpFiltered).toLocaleString('en-US')}</td>
+    <td class="center" title="${Math.round(totalStockQtyFiltered).toLocaleString('en-US')}">${fmtShortIN(totalStockQtyFiltered)}</td>
+    <td class="center" title="৳${Math.round(totalStockDpFiltered).toLocaleString('en-US')}">৳${fmtShortIN(totalStockDpFiltered)}</td>
     <td class="right">
       <div class="pct-cell">
         <div class="pct-bar-track"></div>
