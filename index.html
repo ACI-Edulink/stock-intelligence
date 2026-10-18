@@ -1105,6 +1105,182 @@
     footer{padding:12px 16px 20px; font-size:11px;}
   }
 
+  /* ===== Price List: frozen columns (Photo · ACI Code · Product Name) =====
+     Left offsets / header heights are measured by script (--fz-l2, --fz-l3, --hdr-r2, --hdr-r3)
+     so the frozen block never overlaps or leaves a gap, at any screen size. */
+  .m-filter-toggle{display:none;}
+  /* separate borders (spacing 0 = same look) so frozen cells stay fully opaque while scrolling */
+  #priceTable{border-collapse:separate; border-spacing:0;}
+  #priceTable thead tr:not(.group-row) th{top:var(--hdr-r2, 34px);}
+  #priceTable thead tr.totals-row th{top:var(--hdr-r3, 68px);}
+  #priceTable .fz,
+  #priceTable .fz-group,
+  #priceTable .fz-total,
+  #priceTable tbody tr:not(.empty-row) > td:nth-child(-n+3){
+    position:sticky;
+  }
+  #priceTable .fz1, #priceTable .fz-group, #priceTable .fz-total,
+  #priceTable tbody tr:not(.empty-row) > td:nth-child(1){left:0;}
+  #priceTable .fz2, #priceTable tbody tr:not(.empty-row) > td:nth-child(2){left:var(--fz-l2, 105px);}
+  #priceTable .fz3, #priceTable tbody tr:not(.empty-row) > td:nth-child(3){left:var(--fz-l3, 220px);}
+  #priceTable .fz, #priceTable .fz-group, #priceTable .fz-total{z-index:14;}
+  #priceTable tbody tr:not(.empty-row) > td:nth-child(-n+3){
+    background:#fff;
+    z-index:3;
+  }
+  #priceTable tbody tr:hover > td:nth-child(-n+3){background:#f7f9fd;}
+  /* divider + soft shadow on the right edge of the frozen block */
+  #priceTable .fz3,
+  #priceTable .fz-group,
+  #priceTable .fz-total,
+  #priceTable tbody tr:not(.empty-row) > td:nth-child(3){
+    box-shadow:inset -1px 0 0 #d5dcea, 6px 0 8px -6px rgba(11,31,58,.22);
+  }
+  @media print{
+    #priceTable .fz, #priceTable .fz-group, #priceTable .fz-total,
+    #priceTable tbody tr:not(.empty-row) > td:nth-child(-n+3){position:static; box-shadow:none;}
+  }
+
+  /* ===== Mobile layout (phones ≤680px) — desktop is not affected ===== */
+  @media screen and (max-width: 680px){
+    body{-webkit-text-size-adjust:100%;}
+
+    /* Header: compact */
+    header.topbar{padding:12px 14px; gap:10px;}
+    .brand-block h1{font-size:15px; line-height:1.3;}
+    .brand-block p{font-size:11.5px;}
+    .brand-block p.last-updated-line{font-size:10.5px;}
+    .top-right{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+    .count-badge{padding:7px 10px; font-size:12px; text-align:center;}
+    .btn-pdf{padding:8px 8px; font-size:12px; gap:6px;}
+    .btn-pdf svg{width:14px; height:14px;}
+
+    /* Tabs: all three visible, sticky while scrolling */
+    .tabnav{position:sticky; top:0; z-index:40; padding:0 6px; gap:0; overflow:visible;}
+    .tabnav button{
+      flex:1 1 0; min-width:0; padding:11px 4px 9px; font-size:12px; line-height:1.25;
+      white-space:normal; text-align:center;
+    }
+
+    /* Filters: search + "Filters" button; rest folds away */
+    .filterbar, .filterbar2, .filterbar3{
+      flex-direction:row; flex-wrap:wrap; align-items:center;
+      padding:10px 12px 12px; gap:8px;
+    }
+    .filterbar2, .filterbar3{margin-top:12px;}
+    .filterbar .filter-group, .filterbar2 .filter-group, .filterbar3 .filter-group{display:none; width:100%;}
+    .filterbar .m-search, .filterbar2 .m-search, .filterbar3 .m-search{
+      display:flex; order:-2; flex:1 1 0 !important; width:auto; min-width:0; max-width:none !important;
+    }
+    .m-search .filter-label, .m-clear .filter-label{display:none;}
+    .search-wrap{min-width:0;}
+    .search-wrap input{padding:9px 12px 9px 34px; font-size:16px; height:38px;}
+    .m-filter-toggle{
+      display:flex; align-items:center; gap:6px; order:-1;
+      height:38px; padding:0 14px; border-radius:999px;
+      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.22);
+      color:#fff; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;
+    }
+    .m-filter-toggle svg{width:15px; height:15px;}
+    .m-filter-count:not(:empty){
+      background:var(--accent); color:#fff; border-radius:999px; font-size:10.5px;
+      min-width:18px; height:18px; line-height:18px; padding:0 5px; text-align:center;
+    }
+    .m-open .m-filter-toggle{background:var(--accent); border-color:var(--accent);}
+    .m-open .m-filter-count:not(:empty){background:#fff; color:var(--accent-dark);}
+    .m-open .filter-group{display:flex;}
+    .filterbar .filter-group.m-clear{margin-top:2px;}
+    .brand-toggle.wrap{max-height:118px;}
+    .btn-clear{padding:9px 14px;}
+
+    /* Shared table card */
+    main{padding:10px 8px 22px;}
+    .table-card{border-radius:10px;}
+    .table-scroll{max-height:calc(100vh - 64px); -webkit-overflow-scrolling:touch;}
+    @supports (height:100dvh){ .table-scroll{max-height:calc(100dvh - 64px);} }
+
+    /* Price List table: compact, readable, frozen block kept narrow */
+    #priceTable{min-width:0; width:max-content; font-size:12px;}
+    #priceTable tbody td{padding:7px 8px;}
+    #priceTable thead tr.group-row th{height:28px; padding:5px 8px; font-size:10px;}
+    #priceTable thead tr:not(.group-row) th{
+      padding:8px 8px; font-size:9.5px; letter-spacing:.3px; line-height:1.25;
+      white-space:normal; vertical-align:bottom;
+    }
+    #priceTable thead tr:not(.group-row) th.center{width:82px; min-width:82px;}
+    #priceTable thead tr.totals-row th{padding:7px 8px; font-size:11px;}
+    #priceTable thead tr.totals-row .totals-count{display:block; margin-left:0;}
+    #priceTable .prod-thumb, #priceTable .thumb-fallback{width:38px; height:38px; border-radius:6px;}
+    #priceTable .thumb-fallback svg{width:18px; height:18px;}
+    #priceTable .fz1{width:56px; min-width:56px;}
+    #priceTable .fz2{width:66px; min-width:66px;}
+    #priceTable .fz2 .th-inner{flex-wrap:wrap;}
+    #priceTable .code-cell{font-size:11px;}
+    #priceTable .fz3, #priceTable tbody .name-cell{width:122px; min-width:122px; max-width:122px;}
+    #priceTable tbody .name-cell{white-space:normal; line-height:1.3; font-size:12px; word-break:break-word;}
+    #priceTable .tag, #priceTable .badge-brand{padding:3px 8px; font-size:10.5px;}
+
+    /* SKU Insights */
+    .insight-bar{margin:12px 10px 0; padding:12px 14px; gap:10px;}
+    .insight-label{font-size:9.5px;}
+    .insight-value{font-size:12px;}
+    .kpi-strip{padding:12px 10px 0; gap:8px;}
+    .kpi-card{padding:10px 12px;}
+    .kpi-label{font-size:9.5px; letter-spacing:.3px; margin-bottom:4px;}
+    .kpi-value{font-size:17px;}
+    .kpi-value-sub{display:block; margin-left:0; font-size:11px;}
+    .sku-grid-wrap{padding:12px 10px 8px;}
+    .sku-grid{grid-template-columns:minmax(0,1fr);}
+    .sku-card{min-width:0;}
+    .sku-pricing-row{gap:6px;}
+    .price-chip{min-width:0;}
+    .sku-packing-row{overflow:visible; gap:2px;}
+    .pack-chip{min-width:0; padding:6px 2px;}
+    .pack-chip .pk-value{font-size:12.5px;}
+    .pack-chip .pk-label{font-size:8px; word-break:break-word;}
+    .pack-arrow{font-size:9px;}
+
+    /* Category Analysis: fits the screen, no sideways scrolling */
+    #categoryTable{font-size:12px;}
+    #categoryTable thead th{padding:9px 6px; font-size:9.5px; letter-spacing:.3px; line-height:1.25; vertical-align:bottom;}
+    #categoryTable thead th .th-inner{gap:2px;}
+    #categoryTable tbody td{padding:8px 6px;}
+    #categoryTable td:first-child, #categoryTable th:first-child{padding-left:10px;}
+    #categoryTable td:last-child, #categoryTable th:last-child{padding-right:10px;}
+    .cat-name-cell{gap:6px; font-size:12px; line-height:1.25;}
+    .cat-dot{width:8px; height:8px;}
+    .pct-cell{flex-direction:column; align-items:flex-end; gap:4px;}
+    .pct-bar-track{width:44px; height:5px;}
+    .pct-num{min-width:0;}
+  }
+
+  /* ===== SKU Insights: tabs + filter bar stay frozen; everything else scrolls ===== */
+  html.sku-sticky .tabnav{position:sticky; top:0; z-index:40;}
+  html.sku-sticky .filterbar2{
+    position:sticky; top:var(--tabnav-h, 46px); z-index:30;
+    box-shadow:0 6px 14px -8px rgba(11,31,58,.45);
+  }
+  @media screen and (max-width: 680px){
+    /* compact frozen block so the cards still get room on a phone */
+        #tab-skuinsights .insight-bar{
+      flex-direction:row; flex-wrap:nowrap; overflow-x:auto; scroll-snap-type:x mandatory;
+      margin:10px 10px 0; padding:10px 12px; gap:14px; scrollbar-width:none;
+    }
+    #tab-skuinsights .insight-bar::-webkit-scrollbar{display:none;}
+    #tab-skuinsights .insight-item{flex:0 0 86%; scroll-snap-align:start;}
+    #tab-skuinsights .insight-value{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    #tab-skuinsights .kpi-strip{
+      display:flex; overflow-x:auto; padding:8px 10px 0; gap:8px; scrollbar-width:none;
+    }
+    #tab-skuinsights .kpi-strip::-webkit-scrollbar{display:none;}
+    #tab-skuinsights .kpi-card{flex:0 0 auto; padding:8px 12px;}
+    #tab-skuinsights .kpi-label{font-size:9px; margin-bottom:2px; white-space:nowrap;}
+    #tab-skuinsights .kpi-value{font-size:15px; white-space:nowrap;}
+    #tab-skuinsights .kpi-value-sub{display:inline; margin-left:4px; font-size:10.5px;}
+    #tab-skuinsights .filterbar2{margin-top:10px; padding:8px 10px 10px;}
+    html.sku-sticky .filterbar2.m-open{position:relative; top:auto;}
+  }
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -1288,7 +1464,7 @@
     </select>
   </div>
 
-  <div class="filter-group" style="flex:1;">
+  <div class="filter-group m-search" style="flex:1;">
     <label class="filter-label">&nbsp;</label>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
@@ -1296,13 +1472,14 @@
     </div>
   </div>
 
-  <div class="filter-group">
+  <div class="filter-group m-clear">
     <label class="filter-label">&nbsp;</label>
     <button class="btn-clear" id="btnClear">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
       Clear Filters
     </button>
   </div>
+  <button type="button" class="m-filter-toggle" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"></path><path d="M7 12h10"></path><path d="M10 18h4"></path></svg>Filters<span class="m-filter-count"></span></button>
 </div>
 
 <main>
@@ -1311,14 +1488,15 @@
       <table id="priceTable">
         <thead>
           <tr class="group-row">
-            <th class="no-sort group-blank" colspan="8"></th>
+            <th class="no-sort group-blank fz-group" colspan="3"></th>
+            <th class="no-sort group-blank" colspan="5"></th>
             <th class="group-title" colspan="3">Pricing</th>
             <th class="group-title" colspan="5">Packing Structure</th>
           </tr>
           <tr>
-            <th class="no-sort">Product Photo</th>
-            <th data-key="code"><div class="th-inner">ACI Code <span class="sort-arrow">↕</span></div></th>
-            <th data-key="name"><div class="th-inner">Product Name <span class="sort-arrow">↕</span></div></th>
+            <th class="no-sort fz fz1">Product Photo</th>
+            <th class="fz fz2" data-key="code"><div class="th-inner">ACI Code <span class="sort-arrow">↕</span></div></th>
+            <th class="fz fz3" data-key="name"><div class="th-inner">Product Name <span class="sort-arrow">↕</span></div></th>
             <th data-key="category"><div class="th-inner">Category <span class="sort-arrow">↕</span></div></th>
             <th data-key="unit"><div class="th-inner">Sales Unit <span class="sort-arrow">↕</span></div></th>
             <th data-key="brand"><div class="th-inner">Brand <span class="sort-arrow">↕</span></div></th>
@@ -1334,7 +1512,8 @@
             <th class="center" data-key="qtc"><div class="th-inner">Qty in Total Pcs in 1 Carton <span class="sort-arrow">↕</span></div></th>
           </tr>
           <tr class="totals-row" id="priceTotalsRow">
-            <th class="no-sort" colspan="6">Total <span id="priceTotalsCount" class="totals-count">(351 SKUs)</span></th>
+            <th class="no-sort fz-total" colspan="3">Total <span id="priceTotalsCount" class="totals-count">(351 SKUs)</span></th>
+            <th class="no-sort" colspan="3"></th>
             <th class="center stock-col" id="priceTotalStock">3,110,523</th>
             <th class="center stock-col" id="priceTotalStockDp">৳158,435,487</th>
             <th class="no-sort" colspan="8"></th>
@@ -7391,7 +7570,7 @@ pencil-Tri-HB</td>
     <div class="brand-toggle wrap" id="subBrandToggle2"><button data-subbrand="" class="active">All</button><button data-subbrand="Accent" class="">Accent</button><button data-subbrand="Arrix" class="">Arrix</button><button data-subbrand="Arrow" class="">Arrow</button><button data-subbrand="Color Kids" class="">Color Kids</button><button data-subbrand="Color Wow" class="">Color Wow</button><button data-subbrand="Colorun" class="">Colorun</button><button data-subbrand="Deli" class="">Deli</button><button data-subbrand="Deli Mate" class="">Deli Mate</button><button data-subbrand="Dmast" class="">Dmast</button><button data-subbrand="Enovation" class="">Enovation</button><button data-subbrand="Every" class="">Every</button><button data-subbrand="Exceed" class="">Exceed</button><button data-subbrand="Finenolo" class="">Finenolo</button><button data-subbrand="Flickwell" class="">Flickwell</button><button data-subbrand="iselect" class="">iselect</button><button data-subbrand="iSelect" class="">iSelect</button><button data-subbrand="iSELECT" class="">iSELECT</button><button data-subbrand="iSlect" class="">iSlect</button><button data-subbrand="iSleect" class="">iSleect</button><button data-subbrand="Lineum" class="">Lineum</button><button data-subbrand="Matte Arris" class="">Matte Arris</button><button data-subbrand="Max" class="">Max</button><button data-subbrand="Nusign" class="">Nusign</button><button data-subbrand="Pulsar" class="">Pulsar</button><button data-subbrand="Scribe" class="">Scribe</button><button data-subbrand="Scrivin" class="">Scrivin</button><button data-subbrand="SMOS" class="">SMOS</button><button data-subbrand="Srcibe" class="">Srcibe</button><button data-subbrand="Stick Up" class="">Stick Up</button><button data-subbrand="Stickup" class="">Stickup</button><button data-subbrand="Think" class="">Think</button><button data-subbrand="Traound" class="">Traound</button><button data-subbrand="V1" class="">V1</button><button data-subbrand="Xtream" class="">Xtream</button></div>
   </div>
 
-  <div class="filter-group" style="flex:1 1 220px; max-width:320px;">
+  <div class="filter-group m-search" style="flex:1 1 220px; max-width:320px;">
     <label class="filter-label">&nbsp;</label>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
@@ -7410,13 +7589,14 @@ pencil-Tri-HB</td>
     </select>
   </div>
 
-  <div class="filter-group">
+  <div class="filter-group m-clear">
     <label class="filter-label">&nbsp;</label>
     <button class="btn-clear" id="btnClear2">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
       Clear Filters
     </button>
   </div>
+  <button type="button" class="m-filter-toggle" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"></path><path d="M7 12h10"></path><path d="M10 18h4"></path></svg>Filters<span class="m-filter-count"></span></button>
 </div>
 
 <div class="sku-grid-wrap">
@@ -23609,7 +23789,7 @@ pencil-Tri-HB</div>
     </div>
   </div>
 
-  <div class="filter-group" style="flex:1 1 260px; max-width:340px;">
+  <div class="filter-group m-search" style="flex:1 1 260px; max-width:340px;">
     <label class="filter-label">&nbsp;</label>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
@@ -23617,13 +23797,14 @@ pencil-Tri-HB</div>
     </div>
   </div>
 
-  <div class="filter-group">
+  <div class="filter-group m-clear">
     <label class="filter-label">&nbsp;</label>
     <button class="btn-clear" id="btnClear3">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
       Clear Filters
     </button>
   </div>
+  <button type="button" class="m-filter-toggle" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"></path><path d="M7 12h10"></path><path d="M10 18h4"></path></svg>Filters<span class="m-filter-count"></span></button>
 </div>
 
 <main style="padding-top:0;">
@@ -25118,4 +25299,77 @@ init2();
 
 
 </div>
-<grammarly-desktop-integration data-grammarly-shadow-root="true" style="visibility: visible !important;"></grammarly-desktop-integration></body></html>
+<grammarly-desktop-integration data-grammarly-shadow-root="true" style="visibility: visible !important;"></grammarly-desktop-integration><script>
+/* ===== Frozen columns + mobile filter toggle (added) ===== */
+(function(){
+  var table = document.getElementById('priceTable');
+  if(table && table.tHead && table.tHead.rows.length > 1){
+    var groupRow = table.tHead.rows[0];
+    var headRow = table.tHead.rows[1];
+    var syncFreeze = function(){
+      var w1 = headRow.cells[0].getBoundingClientRect().width;
+      var w2 = headRow.cells[1].getBoundingClientRect().width;
+      if(!w1) return; // tab hidden
+      var g = groupRow.getBoundingClientRect().height;
+      var r = headRow.getBoundingClientRect().height;
+      table.style.setProperty('--fz-l2', w1 + 'px');
+      table.style.setProperty('--fz-l3', (w1 + w2) + 'px');
+      table.style.setProperty('--hdr-r2', g + 'px');
+      table.style.setProperty('--hdr-r3', (g + r) + 'px');
+    };
+    syncFreeze();
+    if(window.ResizeObserver){
+      var ro = new ResizeObserver(syncFreeze);
+      ro.observe(headRow.cells[0]); ro.observe(headRow.cells[1]);
+      ro.observe(groupRow); ro.observe(headRow);
+    }
+    window.addEventListener('resize', syncFreeze);
+    window.addEventListener('load', syncFreeze);
+  }
+
+  function countActive(bar){
+    var n = 0;
+    bar.querySelectorAll('.multi-select-btn').forEach(function(b){ if(!/^all/i.test(b.textContent.trim())) n++; });
+    bar.querySelectorAll('.brand-toggle').forEach(function(t){
+      var a = t.querySelector('button.active');
+      if(a && (a.getAttribute('data-brand') || a.getAttribute('data-subbrand'))) n++;
+    });
+    bar.querySelectorAll('select.pill-select:not(.sortselect)').forEach(function(s){ if(s.value) n++; });
+    return n;
+  }
+  document.querySelectorAll('.m-filter-toggle').forEach(function(btn){
+    var bar = btn.parentElement;
+    var badge = btn.querySelector('.m-filter-count');
+    var refresh = function(){ var n = countActive(bar); badge.textContent = n ? String(n) : ''; };
+    bar.classList.remove('m-open');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.addEventListener('click', function(){
+      var open = bar.classList.toggle('m-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    ['click','change','input'].forEach(function(ev){
+      bar.addEventListener(ev, function(){ setTimeout(refresh, 0); });
+    });
+    refresh();
+  });
+})();
+</script>
+<script>
+/* ===== SKU Insights: frozen tabs + filter bar (added) ===== */
+(function(){
+  var root = document.documentElement;
+  var tab = document.getElementById('tab-skuinsights');
+  var nav = document.querySelector('.tabnav');
+  if(!tab || !nav) return;
+  function apply(){
+    root.classList.toggle('sku-sticky', tab.classList.contains('active'));
+    root.style.setProperty('--tabnav-h', nav.getBoundingClientRect().height + 'px');
+  }
+  document.querySelectorAll('.tabnav button').forEach(function(b){ b.addEventListener('click', function(){ requestAnimationFrame(apply); }); });
+  window.addEventListener('resize', apply);
+  if(window.ResizeObserver) new ResizeObserver(apply).observe(nav);
+  apply();
+})();
+</script>
+
+</body></html>
